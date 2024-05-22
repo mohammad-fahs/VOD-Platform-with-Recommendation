@@ -1,5 +1,3 @@
-# Untitled
-
 # **Movie Recommendation System Using Spring Boot, Thymeleaf, Kafka, MongoDB, and Spark**
 
 ## **Overview**

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="h-100">
+<head>
+    <meta charset="UTF-8">
+    <title>Movies</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+    <script src="https://kit.fontawesome.com/b3d8f039cf.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+
+
+        h4 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .card {
+            /*margin: 5px;*/
+            /*width: 260px;*/
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            transition: 0.5s;
+        }
+        .card img{
+            /*min-height: 193px;*/
+            background-color: lightgrey;
+            border-radius: 0!important;
+        }
+        .card a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .card:hover {
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+            scale: 1.2;
+            z-index: 999;
+        }
+
+        .card__thumb {
+            overflow: hidden;
+            -webkit-transition: height 0.5s;
+            /*border-radius: 9px 9px 0 0;*/
+            transition: height 0.5s;
+            z-index: 20;
+        }
+
+        .card__thumb img {
+            width: 100%;
+            display: block;
+            opacity: 1;
+            -webkit-transform: scale(1);
+            border-radius: 9px;
+            transform: scale(1);
+            -webkit-transition: opacity 0.5s, -webkit-transform 0.5s;
+            transition: opacity 0.5s, -webkit-transform 0.5s;
+            transition: opacity 0.5s, transform 0.5s;
+            transition: opacity 0.5s, transform 0.5s, -webkit-transform 0.5s;
+        }
+
+
+        .card:hover .card__thumb img {
+            -webkit-transform: scale(1.2);
+            transform: scale(1.2);
+            border-radius: 9px 9px 0 0;
+        }
+
+        .card__body {
+            background-color: white;
+            position: absolute;
+            width: 100%;
+            z-index: 10;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 10px;
+            border-top: none;
+            display: none;
+            border-radius: 0 0 7px 7px;
+        }
+
+        .card:hover .card__body {
+            top: 100%;
+            background-color: white;
+            border: 1px solid darkgrey;
+            border-top: 0;
+            display: block;
+        }
+
+        article:hover{cursor: pointer;}
+        .card__meta {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 30;
+            text-transform: uppercase;
+            font-size: 12px;
+            display: flex;
+            font-weight: bold;
+            gap: 5px;
+        }
+
+        .card__category {
+            padding: 3px 15px;
+            background-color: #119a8b;
+            color: #fff;
+            border-radius: 3px;
+            text-transform: uppercase;
+        }
+
+        .card__rating {
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: #0c6c62;
+            line-height: 20px;
+            background-color: #94e3d9;
+        }
+
+        .card__title {
+            margin-bottom: 4px;
+            color: #222;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .card{
+            border-radius: 0!important;
+        }
+        .card__subtitle {
+            margin-bottom: 4px;
+            font-size: 12px;
+            color: darkslategray;
+        }
+
+        .card__subtitle > span {
+            display: inline-block;
+            color: #14b8a6;
+            font-weight: bold;
+            position: relative;
+        }
+
+        .card__subtitle > span + span {
+            margin-right: 14px;
+        }
+
+        .card__subtitle > span + span::after {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: #14b8a6;
+            border-radius: 100%;
+            opacity: 0.75;
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .card__description {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            color: #666C74;
+            line-height: 14px;
+            display: -webkit-box;
+            font-size: 10px;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            display: none;
+        }
+
+        .card:hover .card__description {
+            display: block;
+        }
+
+        .icon + .icon {
+            padding-left: 10px;
+        }
+
+        .pill strong {
+            color: #14b8a6;
+            font-weight: bold;
+        }
+
+        .text-container {
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            height: calc(1.2em * 4); /* Adjust the multiplier based on line height */
+            line-height: 1.2em; /* Adjust line height as needed */
+        }
+
+    </style>
+
+
+</head>
+<body style="margin: 30px;background-color: #f7f7f7;margin-top: 10px;">
+<div class="container-fluid">
+    <div class="">
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                <span class="fs-4">MoviesX</span>
+            </a>
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="#" class="nav-link" target="_blank">GitHub</a></li>
+                <li class="nav-item"><a href="#" class="nav-link" >Documentation</a></li>
+            </ul>
+        </header>
+    </div>
+    <div class="row" style="">
+        <div class="col-1 "></div>
+        <div class="col-10 ">
+            <div>
+                <h3>Number of movies on this platform is <span th:text="${count}"></span></h3>
+            </div>
+            <div id="searchResults" class="row row-cols-1 row-cols-lg-6 row-cols-md-4 row-cols-sm-2" style="margin-top: 30px;">
+
+            </div>
+            <div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li id="previous" class="page-item">
+                            <a class="page-link" href="#" tabindex="-1">Previous</a>
+                        </li>
+                        <li id="next" class="page-item">
+                            <a class="page-link" href="#">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        <div class="col-1 "></div>
+    </div>
+    </div>
+</div>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const page = urlParams.get('page') || '1';
+
+    const currentPage = parseInt(urlParams.get('page')) || 1;
+
+    // Update previous link href
+
+    if (currentPage > 1) {
+        $('#previous').empty().append(`
+                      <a class="page-link" href="/movies?page=${currentPage - 1}" tabindex="-1">Previous</a>
+        `);
+    }else{
+        $('#previous').empty().append(`
+                      <a class="page-link disabled" href="#" tabindex="-1">Previous</a>
+        `);
+    }
+
+    // Update next link href
+
+    $('#next').empty().append(`
+         <a class="page-link" href="/movies?page=${currentPage + 1}">Next</a>
+    `)
+</script>
+<script>
+
+    const  placeholder = `<div class="col">
+                            <div class="card  m-1" aria-hidden="true">
+                                <div class="card-body">
+                                    <div class="h5 card-title placeholder-glow">
+                                        <span class="placeholder col-6"></span>
+                                    </div>
+                                    <p class="card-text placeholder-glow">
+                                      <span class="placeholder col-7"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-6"></span>
+                                      <span class="placeholder col-8"></span>
+                                    </p>
+                                </div>
+                          </div>
+                          <br>
+                          <div class="card  m-1" aria-hidden="true">
+                                <div class="card-body">
+                                    <div class="h5 card-title placeholder-glow">
+                                        <span class="placeholder col-6"></span>
+                                    </div>
+                                    <p class="card-text placeholder-glow">
+                                      <span class="placeholder col-7"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-6"></span>
+                                      <span class="placeholder col-8"></span>
+                                    </p>
+                                </div>
+                          </div>
+                          <br>
+                          <div class="card  m-1" aria-hidden="true">
+                                <div class="card-body">
+                                    <div class="h5 card-title placeholder-glow">
+                                        <span class="placeholder col-6"></span>
+                                    </div>
+                                    <p class="card-text placeholder-glow">
+                                      <span class="placeholder col-7"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-6"></span>
+                                      <span class="placeholder col-8"></span>
+                                    </p>
+                                </div>
+                          </div>
+                          <br>
+                          <div class="card  m-1" aria-hidden="true">
+                                <div class="card-body">
+                                    <div class="h5 card-title placeholder-glow">
+                                        <span class="placeholder col-6"></span>
+                                    </div>
+                                    <p class="card-text placeholder-glow">
+                                      <span class="placeholder col-7"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-4"></span>
+                                      <span class="placeholder col-6"></span>
+                                      <span class="placeholder col-8"></span>
+                                    </p>
+                                </div>
+                          </div>
+                          <br>
+
+                        </div>`;
+
+    const getMovies = function(){
+
+        $('#searchResults').html(placeholder + placeholder + placeholder +placeholder +placeholder +placeholder);
+
+        $.ajax({
+            type: "GET",
+            url: "/get-movies?page="+page+"&size="+36,
+            success: function(data) {
+                $('#searchResults').empty();
+                $.each(data, function(index, document) {
+                    let article = $(`
+                        <article class="col">
+                            <div class="card mb-4 shadow-sm">
+                                <header class="card__thumb">
+                                    ${document.posterPath ? `<img src="${document.posterPath}">` : ''}
+                                </header>
+                                <div class="card__meta">
+                                    ${document.originalLanguage ? `<div class="card__category">${document.originalLanguage}</div>` : ''}
+                                    ${document.voteAverage ? `<div class="card__rating">${document.voteAverage}</div>` : ''}
+                                </div>
+                                <div class="card__body">
+                                    ${document.title ? `<h3 class="card__title" style="direction: ltr">${document.title}</h3>` : ''}
+                                </div>
+                            </div>
+                        </article>
+                    `);
+
+                    // Add click event listener
+                    article.on('click', function() {
+                        window.location.href = `/movie?id=${document.id}`;
+                    });
+
+                    $('#searchResults').append(article);
+                });
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Error occurred: ", textStatus, errorThrown);
+            }
+        });
+    }
+
+
+    // $(document).ready(function () {
+    //     $('#searchInput').on('keyup', search);
+    // });
+
+
+
+    getMovies();
+
+
+</script>
+</body>
+</html>

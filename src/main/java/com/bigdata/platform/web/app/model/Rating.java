@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @AllArgsConstructor
 public class Rating {
     @Id
-    private Long id;
+    private String id;
     public String userId;
     public Integer rating;
     public Long movieId;

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" class="h-100">
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" th:href="@{/css/rating.css}">
+    <script th:src="@{js/index.js}"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const uniqueId = localStorage.getItem('uniqueId');
+            if (!uniqueId) {
+                fetch('/generate-unique-id')
+                    .then(response => {
+                        const newUniqueId = response.headers.get('X-Unique-ID');
+                        if (newUniqueId) {
+                            localStorage.setItem('uniqueId', newUniqueId);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                console.log('Unique ID:', uniqueId);
+            }
+        });
+
+        function sendUniqueId(movieId) {
+            const uniqueId = localStorage.getItem('uniqueId');
+            const ratingValue = document.querySelector('input[name="rating"]:checked').value;
+
+            if (uniqueId) {
+                fetch('/receive-id', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId: uniqueId, rating: ratingValue, movieId: movieId })
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log('ID and rating sent successfully');
+                        } else {
+                            console.error('Failed to send ID and rating');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                console.error('No unique ID found in local storage');
+            }
+        }
+    </script>
+        <style>
+            :root {
+                --star-rating-max-stars: 10;
+                --star-rating-star-color-active: #ff0;
+                --star-rating-star-color-disabled: #555;
+                --star-rating-star-color-hover: #daa520;
+                --star-rating-star-color-selected: var(--star-rating-star-color-hover);
+                --star-rating-star-color: #eee;
+                --star-rating-star-scale-hover: 1.3;
+                --star-rating-star-size: 1.5;
+            }
+
+            fieldset.star-rating {
+                border: none;
+                padding: 0;
+                margin: 0;
+
+                display: inline-grid;
+                grid-template-columns: repeat(var(--star-rating-max-stars), 1fr);
+                grid-template-columns: 1fr;
+                width: fit-content;
+
+                & label {
+                    cursor: pointer;
+                    text-align: center;
+                }
+
+                & input {
+                    appearance: none;
+                    background-color: transparent;
+                    cursor: pointer;
+                    grid-row: 2;
+                    height: auto;
+                    margin: 0;
+                    padding: 0.2rem;
+                    text-align: center;
+                    transition: transform 0.2s ease-out;
+                    width: auto;
+                }
+
+                & input:after {
+                    color: var(--star-rating-star-color);
+                    content: "\2606\FE0E";
+                    font-family: Helvetica, Arial, sans-serif;
+                    font-size: calc(1.5rem * var(--star-rating-star-size));
+                }
+
+                & input:hover:after {
+                    color: var(--star-rating-star-color-hover);
+                    content: "\2605\FE0E";
+                }
+
+                & input:checked:after {
+                    color: var(--star-rating-star-color-selected);
+                    content: "\2605\FE0E";
+                }
+
+                & input:has(~ input:hover):after,
+                & input:has(~ input:checked):after,
+                & input:has(~ input:focus):after {
+                    color: var(--star-rating-star-color-selected);
+                    content: "\2605\FE0E";
+                }
+
+                & input:hover ~ input:after {
+                    color: var(--star-rating-star-color);
+                    content: "\2606\FE0E";
+                }
+
+                @media (hover) {
+                    & input:hover {
+                        transform: scale(var(--star-rating-star-scale-hover));
+                    }
+
+                    & input:active {
+                        transform: scale(calc(var(--star-rating-star-scale-hover) + 0.3));
+                    }
+
+                    & input:active:after {
+                        animation: 0.1s linear 0s forwards star-rating-active-anim;
+                    }
+                }
+            }
+
+            @keyframes star-rating-active-anim {
+                from {
+                    color: var(--star-rating-star-color-hover);
+                }
+                to {
+                    color: var(--star-rating-star-color-active);
+                }
+            }
+
+
+            fieldset.star-rating.hidelabels label {
+                clip: rect(0 0 0 0);
+                clip-path: inset(50%);
+                height: 1px;
+                overflow: hidden;
+                position: absolute;
+                white-space: nowrap;
+                width: 1px;
+            }
+
+            fieldset.star-rating:disabled {
+                & label,
+                & input {
+                    pointer-events: none;
+                }
+
+                & label,
+                & input:after,
+                & input:has(~ input:hover):after,
+                & input:has(~ input:checked):after,
+                & input:has(~ input:focus):after {
+                    color: var(--star-rating-star-color-disabled);
+                }
+            }
+        </style>
+</head>
+<body>
+
+<header th:style="'background-image: url(\'' + ${movie.backdropPath} + '\');'">
+    <nav>
+        <p class="logo">
+            VOD<span>Platform<span>
+        </p>
+
+        <i class="fa fa-bars" id="menu"></i>
+
+        <ul id="menu-box">
+
+            <li>GitHub</li>
+            <li>Documentation</li>
+        </ul>
+
+    </nav>
+
+    <div class="popular-movie-slider">
+
+        <img th:src="${movie.posterPath}" class="poster">
+
+        <div class="popular-movie-slider-content">
+            <h2 class="movie-name" th:text="${movie.title}"></h2>
+            <ul class="category">
+                <p th:each="category,iter : ${movie.genres}" th:text="${category}" th:if="${iter.index == 0}"></p>
+                <li th:each="category, iter : ${movie.genres}" th:text="${category}" th:unless="${iter.index == 0}"></li>
+            </ul>
+            <p class="desc" th:text="${movie.overview}"></p>
+
+            <div class="movie-info">
+                <i class="fa fa-clock-o"> &nbsp;&nbsp;&nbsp;<span th:text="${movie.runtime}"></span></i>
+                <i class="fa fa-volume-up"> &nbsp;&nbsp;&nbsp;<span th:text="'votes count '+${movie.voteCount}"></span></i>
+                <i class="fa fa-circle"> &nbsp;&nbsp;&nbsp;<span th:text="'Imdb: ' + ${movie.voteAverage} + '/10'"></span></i>
+
+            </div>
+        </div>
+
+    </div>
+
+</header>
+
+<section class="movie-card-section">
+    <div class="title-container">
+        <h2>Please rate this movie</h2>
+    </div>
+
+    <div class="rating-container">
+        <fieldset class="star-rating hidelabels">
+            <label for="rating-1">1</label>
+            <input type="radio" id="rating-1" name="rating" value="1" />
+            <label for="rating-2">2</label>
+            <input type="radio" id="rating-2" name="rating" value="2" />
+            <label for="rating-3">3</label>
+            <input type="radio" id="rating-3" name="rating" value="3" />
+            <label for="rating-4">4</label>
+            <input type="radio" id="rating-4" name="rating" value="4" />
+            <label for="rating-5">5</label>
+            <input type="radio" id="rating-5" name="rating" value="5" />
+            <label for="rating-6">6</label>
+            <input type="radio" id="rating-6" name="rating" value="6" />
+            <label for="rating-7">7</label>
+            <input type="radio" id="rating-7" name="rating" value="7" checked="true" />
+            <label for="rating-8">8</label>
+            <input type="radio" id="rating-8" name="rating" value="8" />
+            <label for="rating-9">9</label>
+            <input type="radio" id="rating-9" name="rating" value="9" />
+            <label for="rating-10">10</label>
+            <input type="radio" id="rating-10" name="rating" value="10" />
+        </fieldset>
+        <br>
+        <button style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); font-size: 16px; width: 150px;" th:onclick="'sendUniqueId(\'' + ${movie.id} + '\')'">Submit</button>
+
+
+    </div>
+</section>
+
+<footer>
+
+    <div class="logo-box">
+        <p class="logo">
+            VOD<span>Platform</span>
+        </p>
+        <p><i class="fa fa-copyright"></i> BigData Project 2024</p>
+    </div>
+
+    <ul>
+        <li>GitHub</li>
+        <li>Documentation</li>
+        <li>contact</li>
+    </ul>
+
+</footer>
+
+
+</body>
+</html>

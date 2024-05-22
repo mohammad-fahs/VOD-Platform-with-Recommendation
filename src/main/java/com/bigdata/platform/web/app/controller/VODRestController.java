@@ -1,9 +1,12 @@
 package com.bigdata.platform.web.app.controller;
 
+import com.bigdata.platform.kafka.config.RatingProducer;
+import com.bigdata.platform.web.app.model.Rating;
 import com.bigdata.platform.web.app.service.MovieService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -12,6 +15,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class VODRestController {
     private final MovieService movieService;
+    private final RatingProducer ratingProducer;
 
 
     @GetMapping(value = "/get-movies")
@@ -35,16 +39,17 @@ public class VODRestController {
 
     @GetMapping("/generate-unique-id")
     public void generateUniqueId(HttpServletResponse response) {
-        // Generate a unique ID
         String uniqueId = UUID.randomUUID().toString();
-
-        // Set the unique ID as a response header
         response.setHeader("X-Unique-ID", uniqueId);
     }
 
     @PostMapping("/receive-id")
-    public void receiveId(@RequestBody String uniqueId) {
-        // Handle the received unique ID
-        System.out.println("Received Unique ID: " + uniqueId);
+    public ResponseEntity<?> receiveId(@RequestBody Rating rating) {
+        try{
+            return ResponseEntity.ok(ratingProducer.send(rating.generateString()));
+        }catch (Exception e){
+            System.out.println("failed to publish rating!");
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

@@ -71,7 +71,6 @@
     <img th:src="${movie.posterPath}" class="poster">
 
     <div class="popular-movie-slider-content">
-      <p class="release">2017</p>
       <h2 class="movie-name" th:text="${movie.title}"></h2>
       <ul class="category">
         <p th:each="category,iter : ${movie.genres}" th:text="${category}" th:if="${iter.index == 0}"></p>
@@ -92,9 +91,6 @@
 </header>
 
 <section>
-
-
-  <button onclick="sendUniqueId()">Send Unique ID</button>
   <div class="movie-card-section">
 
     <div class="card">

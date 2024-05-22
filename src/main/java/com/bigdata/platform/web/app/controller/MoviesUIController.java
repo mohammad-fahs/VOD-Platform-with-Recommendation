@@ -24,4 +24,10 @@ public class MoviesUIController {
         model.addAttribute("movie", movieService.getMovie(id));
         return "movie";
     }
+
+    @GetMapping(value = "/rate")
+    public String rateMovie(Model model){
+        model.addAttribute("movie",movieService.findRandomMovie());
+        return "rating";
+    }
 }

@@ -9,23 +9,28 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.SampleOperation;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class MovieService {
     private final MovieRepository movieRepository;
+    private final MongoTemplate mongoTemplate;
 
-    public Page<Movie> getMoviesPagination(int page, int size){
-        Pageable pageable =  PageRequest.of(page,size);
-        return movieRepository.findAll(pageable);
+
+    public Movie findRandomMovie() {
+        SampleOperation sampleOperation = Aggregation.sample(1);
+        Aggregation aggregation = Aggregation.newAggregation(sampleOperation);
+        AggregationResults<Movie> aggregationResults = mongoTemplate.aggregate(aggregation, "movie", Movie.class);
+        return aggregationResults.getUniqueMappedResult();
     }
 
     public List<Movie> getMoviesList(int page, int size){

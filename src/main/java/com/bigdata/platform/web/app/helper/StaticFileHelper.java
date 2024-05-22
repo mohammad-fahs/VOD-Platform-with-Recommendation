@@ -1,5 +1,6 @@
 package com.bigdata.platform.web.app.helper;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
@@ -9,7 +10,6 @@ import java.io.InputStream;
 import java.io.UncheckedIOException;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 public class StaticFileHelper {
     private static final Logger LOGGER = Logger.getLogger(StaticFileHelper.class.getName());
     public static String getFileContent(String fileName) {

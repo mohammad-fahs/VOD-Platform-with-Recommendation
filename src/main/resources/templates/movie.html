@@ -324,13 +324,22 @@
     .icon + .icon {
       padding-left: 10px;
     }
+
+    .card__thumb{
+      height: auto;
+      padding: unset;
+    }
+    .logo:hover {
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
 
 <header th:style="'background-image: url(\'' + ${movie.backdropPath} + '\');'">
   <nav>
-    <p class="logo">
+    <p class="logo" onclick="window.location.href='/movies';">
       VOD<span>Platform<span>
     </p>
 
@@ -406,8 +415,16 @@
   </div>
 </section>
 
-<div id="searchResults" class="row row-cols-5  " style="margin-top: 30px;">
+<div class="container-fluid">
+  <div class="row" style="background-color: #111111">
+    <div class="col-1 "></div>
+    <div class="col-10 ">
+      <div id="searchResults" class="row row-cols-5  " style="margin-top: 30px">
 
+      </div>
+      <div class="col-1 "></div>
+    </div>
+  </div>
 </div>
 
 <footer>
@@ -441,65 +458,24 @@
                                       <span class="placeholder col-4"></span>
                                       <span class="placeholder col-6"></span>
                                       <span class="placeholder col-8"></span>
-                                    </p>
-                                </div>
-                          </div>
-                          <br>
-                          <div class="card  m-1" aria-hidden="true">
-                                <div class="card-body">
-                                    <div class="h5 card-title placeholder-glow">
-                                        <span class="placeholder col-6"></span>
-                                    </div>
-                                    <p class="card-text placeholder-glow">
-                                      <span class="placeholder col-7"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-6"></span>
+                                       <span class="placeholder col-6"></span>
                                       <span class="placeholder col-8"></span>
-                                    </p>
-                                </div>
-                          </div>
-                          <br>
-                          <div class="card  m-1" aria-hidden="true">
-                                <div class="card-body">
-                                    <div class="h5 card-title placeholder-glow">
-                                        <span class="placeholder col-6"></span>
-                                    </div>
-                                    <p class="card-text placeholder-glow">
-                                      <span class="placeholder col-7"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-6"></span>
+                                       <span class="placeholder col-6"></span>
                                       <span class="placeholder col-8"></span>
+
                                     </p>
                                 </div>
                           </div>
-                          <br>
-                          <div class="card  m-1" aria-hidden="true">
-                                <div class="card-body">
-                                    <div class="h5 card-title placeholder-glow">
-                                        <span class="placeholder col-6"></span>
-                                    </div>
-                                    <p class="card-text placeholder-glow">
-                                      <span class="placeholder col-7"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-4"></span>
-                                      <span class="placeholder col-6"></span>
-                                      <span class="placeholder col-8"></span>
-                                    </p>
-                                </div>
-                          </div>
-                          <br>
 
                         </div>`;
 
   const getMovies = function(){
 
-    $('#searchResults').html(placeholder +placeholder);
+    $('#searchResults').html(placeholder+placeholder+placeholder+placeholder+placeholder);
 
     $.ajax({
       type: "GET",
-      url: "/get-movies?page="+615+"&size="+5,
+      url: "/get-movies?page="+5+"&size="+5,
       success: function(data) {
         $('#searchResults').empty();
         $.each(data, function(index, document) {

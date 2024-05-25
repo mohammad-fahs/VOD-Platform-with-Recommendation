@@ -63,6 +63,10 @@
                 --star-rating-star-size: 1.5;
             }
 
+            .logo:hover {
+                cursor: pointer;
+            }
+
             fieldset.star-rating {
                 border: none;
                 padding: 0;
@@ -175,7 +179,7 @@
 
 <header th:style="'background-image: url(\'' + ${movie.backdropPath} + '\');'">
     <nav>
-        <p class="logo">
+        <p class="logo" onclick="window.location.href='/movies';">
             VOD<span>Platform<span>
         </p>
 
@@ -261,8 +265,8 @@
 <footer>
 
     <div class="logo-box">
-        <p class="logo">
-            VOD<span>Platform</span>
+        <p class="logo" onclick="window.location.href='/movies';">
+            VOD<span>Platform<span>
         </p>
         <p><i class="fa fa-copyright"></i> BigData Project 2024</p>
     </div>

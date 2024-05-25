@@ -47,6 +47,8 @@
             } else {
                 console.error('No unique ID found in local storage');
             }
+
+            window.location.href = '/rate'
         }
     </script>
         <style>
@@ -213,7 +215,12 @@
 
 <section class="movie-card-section">
     <div class="title-container">
-        <h2>Please rate this movie</h2>
+        <h2>
+            To improve our recommendations, we need your help!<br>
+            <span style="color: #C10101 ; font-weight: bold">Please take a moment to rate at least 5 of movies.</span> <br>
+            Your input will significantly enhance our recommendation system and help us serve you better.<br>
+            Thank you for your time and support!
+        </h2>
     </div>
 
     <div class="rating-container">
@@ -240,7 +247,12 @@
             <input type="radio" id="rating-10" name="rating" value="10" />
         </fieldset>
         <br>
-        <button style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); font-size: 16px; width: 150px;" th:onclick="'sendUniqueId(\'' + ${movie.id} + '\')'">Submit</button>
+        <div style="display: flex; gap: 15px;">
+            <button style="padding: 10px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); font-size: 16px; width: 150px;" th:onclick="'sendUniqueId(\'' + ${movie.id} + '\')'">Submit</button>
+            <button style="padding: 10px; background-color: #F7D100; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); font-size: 16px; width: 150px;" onclick="window.location.href='/rate'">Next</button>
+            <button style="padding: 10px; background-color: #CA001E; color: white; border: none; border-radius: 5px; cursor: pointer; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); font-size: 16px; width: 150px;" onclick="window.location.href='/movies'">Movies</button>
+        </div>
+
 
 
     </div>

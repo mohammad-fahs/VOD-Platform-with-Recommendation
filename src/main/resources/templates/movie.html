@@ -475,7 +475,7 @@
 
     $.ajax({
       type: "GET",
-      url: "/get-movies?page="+5+"&size="+5,
+      url: "/recommendations?userId="+localStorage.getItem('uniqueId'),
       success: function(data) {
         $('#searchResults').empty();
         $.each(data, function(index, document) {

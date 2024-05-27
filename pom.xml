@@ -16,6 +16,8 @@
 	<properties>
 		<java.version>17</java.version>
 		<opencv.version>5.9</opencv.version>
+		<jedis.dep.versoin>5.1.3</jedis.dep.versoin>
+		<okhttp.dep.version>2.7.5</okhttp.dep.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -31,6 +33,10 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.kafka</groupId>
 			<artifactId>spring-kafka</artifactId>
 			<version>3.2.0</version>
@@ -43,6 +49,16 @@
 			<groupId>com.opencsv</groupId>
 			<artifactId>opencsv</artifactId>
 			<version>${opencv.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>redis.clients</groupId>
+			<artifactId>jedis</artifactId>
+			<version>${jedis.dep.versoin}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp</groupId>
+			<artifactId>okhttp</artifactId>
+			<version>${okhttp.dep.version}</version>
 		</dependency>
 
 		<dependency>

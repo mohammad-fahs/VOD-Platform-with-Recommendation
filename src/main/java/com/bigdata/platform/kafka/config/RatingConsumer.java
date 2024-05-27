@@ -16,7 +16,7 @@ public class RatingConsumer {
     private final RatingRepository ratingRepository;
     @KafkaListener(topics = "rating", groupId = "ratings-group")
     public void consume(String message) throws IOException {
-        try (FileWriter writer = new FileWriter("ratings.csv", true)) {
+        try (FileWriter writer = new FileWriter("ML-Model/ratings.csv", true)) {
             writer.append(message).append("\n");
         } catch (IOException e) {
             System.out.println("error writing file");

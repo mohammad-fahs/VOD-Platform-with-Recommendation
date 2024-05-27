@@ -56,9 +56,15 @@ public class MovieService {
             movie.setVoteAverage(Math.round(movie.getVoteAverage() * 10.0) / 10.0);
         return movie;
     }
+
+    public List<Movie> getMovies(List<Long> ids){
+        return movieRepository.findAllById(ids);
+    }
+
     public long getMoviesCount() {
         return movieRepository.count();
     }
+
     public void readAndSaveMoviesFromCSV() {
         List<Movie> movies = new ArrayList<>();
         List<Long> ids = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.bigdata.platform.web.app.controller;
 
 import com.bigdata.platform.kafka.config.RatingProducer;
+import com.bigdata.platform.redis.sevrice.RecommendationService;
 import com.bigdata.platform.web.app.model.Rating;
 import com.bigdata.platform.web.app.service.MovieService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -16,7 +18,7 @@ import java.util.UUID;
 public class VODRestController {
     private final MovieService movieService;
     private final RatingProducer ratingProducer;
-
+    private final RecommendationService recommendationService;
 
     @GetMapping(value = "/get-movies")
     public ResponseEntity<?> getMovies(@RequestParam(value = "page") Integer page, @RequestParam(value = "size") Integer size){
@@ -36,6 +38,19 @@ public class VODRestController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping(value = "/recommendations")
+    public ResponseEntity<?> getRecommendations(@RequestParam(value = "userId") String userId){
+        try{
+            List<Long> ids = recommendationService.getUserRecommendations(userId);
+            System.out.println(ids);
+            return ResponseEntity.ok(movieService.getMovies(ids));
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 
     @GetMapping("/generate-unique-id")
     public void generateUniqueId(HttpServletResponse response) {

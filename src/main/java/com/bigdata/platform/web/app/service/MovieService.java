@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
+import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.SampleOperation;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -27,9 +29,19 @@ public class MovieService {
 
 
     public Movie findRandomMovie() {
+        // Create the match operation to filter movies where adult is false
+        MatchOperation matchOperation = Aggregation.match(Criteria.where("adult").is(false));
+
+        // Create the sample operation to randomly select one movie
         SampleOperation sampleOperation = Aggregation.sample(1);
-        Aggregation aggregation = Aggregation.newAggregation(sampleOperation);
+
+        // Combine the match and sample operations into an aggregation
+        Aggregation aggregation = Aggregation.newAggregation(matchOperation, sampleOperation);
+
+        // Execute the aggregation
         AggregationResults<Movie> aggregationResults = mongoTemplate.aggregate(aggregation, "movie", Movie.class);
+
+        // Return the unique mapped result
         return aggregationResults.getUniqueMappedResult();
     }
 
